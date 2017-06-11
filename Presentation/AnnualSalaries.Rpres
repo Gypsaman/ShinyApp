@@ -1,0 +1,59 @@
+AnnualSalaries
+========================================================
+author: 
+date: 
+autosize: true
+
+Project
+========================================================
+type: sub-section
+
+This presentation is for the course project for the Developing Data Products Course within the Data Science specialization.
+
+The objectives of this project is to:
+
+1.  Create a **shiny** application that has at least one input control and a server side process.  Documentation of the use of the application should be on the website.
+2.  Create a pitch for the application which is what this document hopes to acccomplish
+
+Summary
+========================================================
+type: sub-section
+
+The United States Census Bureau provides a website for fact finding in the united states this web site is located at: [Fact Finder](https://factfinder.census.gov/faces/nav/jsf/pages/index.xhtml).  In this web site you can download different data describing sectors of the American economy.
+
+The data obtained by the Census Bureau is utilized to make policy decision in the government and to help business target their marketing campaigns.
+
+
+
+Utilizing the Application
+========================================================
+type: sub-section
+
+The application contains three sections:
+
+1. An area to select the data.
+
+2. A map view of the data, each state is color coded by total pay.
+
+3. A table representation of the data.
+
+The user can select the Year of the data available.  A combination of manufacturing activities can also be selected.  for each item selected, the data will be summarized by state.
+
+The map will show a color level for the total annual salaries paid for the categories selected.  On the right hand side of the map, a gradiant legen is shown to visualize the pay levels in each state.
+
+The data table shows the totals for each state.
+
+Data Used
+========================================================
+type: sub-section
+
+- Our specific data set is from the annual surver of manufacturers and can be downloaded [here](http://www2.census.gov/econ2015/AM/sector31/AM1531AS101.zip).  
+- The descriptor utlized in this application is the annual pay reported by sector and state.
+
+```{r echo=FALSE}
+library(data.table)
+econ <- fread('AM1531AS101.dat')
+head(econ)
+
+
+

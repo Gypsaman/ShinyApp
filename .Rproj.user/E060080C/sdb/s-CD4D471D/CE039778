@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "\n# This is the server logic for a Shiny web application.\n# You can find out more about building applications with Shiny here:\n#\n# http://shiny.rstudio.com\n#\n\nlibrary(shiny)\nlibrary(maps)\nlibrary(mapdata)\nlibrary(ggplot2)\nlibrary(plyr)\nlibrary(mapproj)\n\nstates_map <- map_data(\"state\")\n\necon <- read.delim(\"AM1531AS101.dat\",header = TRUE,sep=\"|\",stringsAsFactors = FALSE)\nlengthIs <- function(x) nchar(x)==3\nsummcat <- sapply(econ$NAICS2012,lengthIs)\n## Filter out Total Categories to leave only detail\necon <- econ[summcat,]\n## Filter out US to only leave states\necon <- econ[econ$GEO_ID != \"0100000US\",]\n\nmantype <- sort(unique(econ$NAICS2012_TTL))\nYears <- sort(unique(econ$YEAR))\n\nshinyServer(function(input, output) {\n  \n\n  output$SalariesByState <- renderPlot(\n    {\n      paydata <- ddply(econ[econ$YEAR %in% input$Years & econ$NAICS2012_TTL %in% input$mantypes,],~GEO_TTL,summarise,pay=sum(PAYANN))\n      Pay <- paydata$pay\n      title <- \"Annual Salaries by State\"\n      p <- ggplot(paydata, aes(map_id = tolower(paydata$GEO_TTL)))\n      p <- p + geom_map(aes(fill = Pay), map = states_map, colour='white') + expand_limits(x = states_map$long, y = states_map$lat)\n      p <- p + coord_map() + theme_bw()\n      p <- p + labs(x = \"Long\", y = \"Lat\", title = title)\n      print(p)\n    })\n\n  output$mantypeControls <- renderUI({\n      checkboxGroupInput('mantypes', 'Manufacturing Activities', mantype, selected=mantype)\n  })\n  output$years <- renderUI({\n    checkboxGroupInput('Years','Years of Data',Years,selected=Years)\n  })\n  \n  output$table <- renderDataTable({\n    paydata <- ddply(econ[econ$YEAR %in% input$Years & econ$NAICS2012_TTL %in% input$mantypes,],~GEO_TTL,summarise,pay=sum(PAYANN))\n    return(paydata)\n    })\n  \n})\n",
+    "created" : 1497223980552.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1117218417",
+    "id" : "CE039778",
+    "lastKnownWriteTime" : 1497224606,
+    "last_content_update" : 1497224606858,
+    "path" : "~/ShinyProject/ShinyApp/server.R",
+    "project_path" : "server.R",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
